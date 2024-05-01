@@ -1,0 +1,10 @@
+# listening for changes
+1- the user connects to our service
+2- the user registers a serial to listen on
+3- our service registers this serial to the list of serials it's listening on
+4- our service would receive changes happening on specific serial eventually
+5- our service would send the changes happened on that serial to all users which have registered it
+
+# stop listening for changes
+1- the user can stop listening for one of his registered serials
+2- if there are no more listeners on the provided serial, our service should un-register this serial

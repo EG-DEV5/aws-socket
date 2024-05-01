@@ -1,0 +1,8 @@
+1- a user should be able to connect to our WebSocket-based service
+2- a user should be able to register his serial/serials to listen for changes on them
+3- multiple users can register the same serial
+4- our service should listen for changes happening on all distinct serials registered by all users
+5- when a change happens on any registered serial, a message with changes happened should be sent to all users that registered that serial
+6- a user should be able to un-register any of his registered serials
+7- our service should stop listening for a specific serial if all users un-registered it eventually
+8- the connection to the user should be terminated after a predefined timeout, if the user has no registered serials
