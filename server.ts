@@ -4,9 +4,9 @@ import http from "http";
 import { Server } from "socket.io";
 import Subject from "./subject/Subject";
 import Listener from "./listener/Listener";
-import IListener from "./listener/IListener";
+import type {IListener} from "./listener/IListener";
 import allowedAttrs from "./global/attrs";
-import Sensor from "./global/Sensor";
+import type  {Sensor} from "./global/Sensor";
 import {
   isAuthenticatedConsumer,
   isAuthenticatedPublisher,
@@ -23,13 +23,14 @@ subject.setSocket(io);
 
 // consumerNamespace.use((socket, next) => {
 //   if (!isAuthenticatedConsumer(socket.handshake.auth.token)) return;
+//   console.log('🚀 ~ consumerNamespace.use ~ isAuthenticatedConsumer', isAuthenticatedConsumer(socket.handshake.auth.token))
 //   next();
 // });
 
-publisherNamespace.use((socket, next) => {
-  if (!isAuthenticatedPublisher(socket.handshake.auth.token)) return;
-  next();
-});
+// publisherNamespace.use((socket, next) => {
+//   if (!isAuthenticatedPublisher(socket.handshake.auth.token)) return;
+//   next();
+// });
 
 consumerNamespace.on("connection", (socket) => {
   console.log("consumer connected", socket.id);

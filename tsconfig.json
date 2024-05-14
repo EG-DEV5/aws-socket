@@ -1,15 +1,20 @@
 {
   "compilerOptions": {
-    "target": "es2016",
+    "target": "ESNext",
     "rootDir": "./",
     "outDir": "./dist",
-    "module": "commonjs",
+    "module": "ESNext",
     "baseUrl": "./",
     "allowJs": true,
     "checkJs": true,
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+
+    "moduleResolution": "bundler", 
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "noEmit": true,
   },
   "include": ["./**/*.ts"],
   "exclude": ["node_modules"]

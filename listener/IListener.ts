@@ -1,7 +1,7 @@
-import Sensor from "../global/Sensor";
+import type {Sensor} from "../global/Sensor";
 
 interface IListener {
   update(sensor: Partial<Sensor>): void;
 }
 
-export default IListener;
+export  { type IListener};

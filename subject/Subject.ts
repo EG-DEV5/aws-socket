@@ -1,7 +1,7 @@
-import IListener from "../listener/IListener";
-import ISubject from "./ISubject";
+import type {IListener} from "../listener/IListener";
+import type {ISubject} from "./ISubject";
 import { Server } from "socket.io";
-import Sensor from "../global/Sensor";
+import type {Sensor} from "../global/Sensor";
 import { initializeApp } from "firebase/app";
 import { getDatabase, onValue, ref, off } from "firebase/database";
 import axios from "axios";
