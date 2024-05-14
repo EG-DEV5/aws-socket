@@ -75,4 +75,4 @@ type Sensor = {
     WorkingHours: number
 }
 
-export default Sensor
+export { type Sensor}
