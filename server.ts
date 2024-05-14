@@ -12,6 +12,7 @@ import {
   isAuthenticatedPublisher,
 } from "./middleware/auth";
 
+const port = process.env.PORT || 2000;
 const app = http.createServer();
 const io = new Server(app, { cors: { origin: "*" } });
 
@@ -65,4 +66,4 @@ publisherNamespace.on("connection", (socket) => {
   });
 });
 
-app.listen(2000, () => console.log("server started"));
+app.listen(port, () => console.log("server started"));
