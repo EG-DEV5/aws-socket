@@ -75,7 +75,7 @@ COPY package.json bun.lockb ./
 
 ENV NODE_ENV=production
 
-RUN bun install --frozen-lockfile --production
+RUN bun install
 
 COPY . .
 
