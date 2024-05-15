@@ -1,6 +1,6 @@
-import IListener from "./IListener";
+import type {IListener} from "./IListener";
 import Subject from "../subject/Subject";
-import Sensor from "../global/Sensor";
+import type {Sensor} from "../global/Sensor";
 
 class Listener implements IListener {
   subject: Subject;
