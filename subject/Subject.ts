@@ -2,9 +2,6 @@ import type {IListener} from "../listener/IListener";
 import type {ISubject} from "./ISubject";
 import { Server } from "socket.io";
 import type {Sensor} from "../global/Sensor";
-import { initializeApp } from "firebase/app";
-import { getDatabase, onValue, ref, off } from "firebase/database";
-import axios from "axios";
 
 class Subject implements ISubject {
   socket: Server = new Server();
@@ -13,27 +10,6 @@ class Subject implements ISubject {
   private stateMapper: Map<string, Map<IListener, string[]>> = new Map();
 
   private constructor() {
-    // setInterval(() => {
-    //   if (this.stateMapper.size == 0) return;
-    //   try {
-    //     const allSerials = Array.from(this.stateMapper.keys());
-    //     for (let i = 0; i < 10; i++) {
-    //       let start = Math.floor((i * 10 * allSerials.length) / 100)
-    //       let end = Math.ceil(((i + 1) * 10 * allSerials.length) / 100)
-    //       let segment = allSerials.slice(start, end)
-    //       axios.post("http://api.saferoad.net:1002/last_fms/location",{ keys: segment, lite: 0 }, {headers: {Authorization:process.env.redis_token}})
-    //       .then(({ data: { data } }) => {
-    //         for (let sensor of data) this.setState(sensor)
-    //       })
-    //       .catch((err) => {
-    //         console.log(err)
-    //       })
-    //       if (end >= allSerials.length) break
-    //     }
-    //   } catch (err) {
-    //     console.log(err)
-    //   }
-    // }, 1000);
   }
 
   static getSubject(): Subject {
@@ -45,7 +21,7 @@ class Subject implements ISubject {
     this.socket = _socket;
   }
 
-  setState(sensor: Partial<Sensor>): void {
+  notifyListeners(sensor: Partial<Sensor>): void {
     const listenersToAttrs = this.stateMapper.get(sensor.SerialNumber) as Map<IListener,string[]>;
     if (!listenersToAttrs) return;
     for (let listener of listenersToAttrs.keys()) {
@@ -74,23 +50,11 @@ class Subject implements ISubject {
   register(serial: string): void {
     if (!this.stateMapper.has(serial)) {
       this.stateMapper.set(serial, new Map());
-      // start listening to firebase
-      const app = initializeApp({ databaseURL: 'https://saferoad-srialfb.firebaseio.com' }, 'updatefb')
-      const db = getDatabase(app)
-      onValue(ref(db, serial), (snapshot) => {
-          if (!snapshot.hasChildren()) return
-          const value = snapshot.val() as Sensor
-          this.setState(value)
-      })
     }
   }
 
   UnRegister(serial: string): void {
     this.stateMapper.delete(serial);
-    // stop listening to firebase
-    const app = initializeApp({ databaseURL: 'https://saferoad-srialfb.firebaseio.com' }, 'updatefb')
-    const db = getDatabase(app)
-    off(ref(db, serial))
   }
 
   addSerialToListener(serial: string, listener: IListener, attrs: string[]): void {
