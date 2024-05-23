@@ -3,35 +3,29 @@ dotenv.config()
 import http from "http";
 import { Server } from "socket.io";
 import Subject from "./subject/Subject";
+import MqttSubject from './thirdPartySubject/MqttSubject';
 import Listener from "./listener/Listener";
 import type {IListener} from "./listener/IListener";
 import allowedAttrs from "./global/attrs";
-import type  {Sensor} from "./global/Sensor";
 import {
   isAuthenticatedConsumer,
-  isAuthenticatedPublisher,
 } from "./middleware/auth";
 
 const port = process.env.PORT || 2000;
 const app = http.createServer();
 const io = new Server(app, { cors: { origin: "*" } });
 
-const publisherNamespace = io.of("/publisher");
 const consumerNamespace = io.of("/consumer");
 
 const subject = Subject.getSubject();
 subject.setSocket(io);
+const mqttSubject = new MqttSubject(process.env.THIRDPARTY_HOST, { protocol: 'mqtt', port: Number(process.env.THIRDPARTY_PORT), username: process.env.THIRDPARTY_USER, password: process.env.THIRDPARTY_PASS });
+mqttSubject.setListener(subject);
 
-// consumerNamespace.use((socket, next) => {
-//   if (!isAuthenticatedConsumer(socket.handshake.auth.token)) return;
-//   console.log('🚀 ~ consumerNamespace.use ~ isAuthenticatedConsumer', isAuthenticatedConsumer(socket.handshake.auth.token))
-//   next();
-// });
-
-// publisherNamespace.use((socket, next) => {
-//   if (!isAuthenticatedPublisher(socket.handshake.auth.token)) return;
-//   next();
-// });
+consumerNamespace.use((socket, next) => {
+  if (!isAuthenticatedConsumer(socket.handshake.auth.token)) return;
+  next();
+});
 
 consumerNamespace.on("connection", (socket) => {
   console.log("consumer connected", socket.id);
@@ -55,14 +49,6 @@ consumerNamespace.on("connection", (socket) => {
 
   socket.on("disconnect", (socket) => {
     subject.removeListener(listener);
-  });
-});
-
-publisherNamespace.on("connection", (socket) => {
-  console.log("publisher connected", socket.id);
-
-  socket.on("publish", (data: Partial<Sensor>[]) => {
-    for (let sensor of data) subject.setState(sensor);
   });
 });
 

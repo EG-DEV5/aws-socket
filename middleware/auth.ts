@@ -9,15 +9,6 @@ const isAuthenticatedConsumer = function (token: string): boolean {
   }
 }
 
-const isAuthenticatedPublisher = function (token: string): boolean {
-  try {
-    decryptApiKey(token, process.env.publisher_key)
-    return true
-  } catch {
-    return false
-  }
-}
-
 function decryptApiKey(text: string, passphrase: string) {
   const key = generateKeyFromPassphrase(passphrase)
   const textParts = text.split(':')
@@ -33,4 +24,4 @@ function generateKeyFromPassphrase(passphrase: string) {
   return crypto.scryptSync(passphrase, '10', 32)
 }
 
-export { isAuthenticatedPublisher, isAuthenticatedConsumer }
+export { isAuthenticatedConsumer }
