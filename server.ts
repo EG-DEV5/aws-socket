@@ -22,10 +22,10 @@ subject.setSocket(io);
 const mqttSubject = new MqttSubject(process.env.THIRDPARTY_HOST, { protocol: 'mqtt', port: Number(process.env.THIRDPARTY_PORT), username: process.env.THIRDPARTY_USER, password: process.env.THIRDPARTY_PASS });
 mqttSubject.setListener(subject);
 
-consumerNamespace.use((socket, next) => {
-  if (!isAuthenticatedConsumer(socket.handshake.auth.token)) return;
-  next();
-});
+// consumerNamespace.use((socket, next) => {
+//   if (!isAuthenticatedConsumer(socket.handshake.auth.token)) return;
+//   next();
+// });
 
 consumerNamespace.on("connection", (socket) => {
   console.log("consumer connected", socket.id);
